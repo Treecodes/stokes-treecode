@@ -12,22 +12,22 @@ TARGETC = 3D_SingStokes_Taylor_case_2.exe
 
 
 CXX = icpc
-CXXFLAGS = -c -O2 -lm
+CXXFLAGS = -O2
 
 
 all: $(TARGET) $(TARGETA) $(TARGETB) $(TARGETC)
 
 $(TARGET): $(OFILES)
-	$(CXX) $(CXXFLAGS) $(OFILES) -o $@
+	$(CXX) $(CXXFLAGS) $(OFILES) -o $@ -lm
 
 $(TARGETA): $(OFILESA)
-	$(CXX) $(CXXFLAGS) $(OFILESA) -o $@
+	$(CXX) $(CXXFLAGS) $(OFILESA) -o $@ -lm
 
 $(TARGETB): $(OFILESB)
-	$(CXX) $(CXXFLAGS) $(OFILESB) -o $@
+	$(CXX) $(CXXFLAGS) $(OFILESB) -o $@ -lm
 
 $(TARGETC): $(OFILESC)
-	$(CXX) $(CXXFLAGS) $(OFILESC) -o $@
+	$(CXX) $(CXXFLAGS) $(OFILESC) -o $@ -lm
 
 clean:
 	rm -rf $(OFILES) $(TARGET) $(OFILESA) $(TARGETA) 
