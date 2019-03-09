@@ -5,12 +5,14 @@ This repo contains files needed to run different versions of the treecode for St
 1. Taylor treecode for singular Stokeslet and stresslet
 
 codes: 3D_SingStokes_Taylor_case_1.cpp, 3D_SingStokes_Taylor_case_2.cpp  
-data: data_Taylor_treecode
+data: data_Taylor_treecode   
+preprint: arxiv.org/abs/1811.12498
 
 2. kernel-independent treecode for regularized Stokeslet and rotlet
 
 codes: 3D_RegStokes_case_1.cpp, 3D_RegStokes_case_2.cpp  
-data: to be added soon
+data: to be added soon  
+preprint: arxiv.org/abs/1902.02250
 
 To build the executables, run the Makefile using the `make` command. Currently the Makefile is set to use the icpc compiler.
 
