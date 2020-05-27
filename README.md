@@ -8,20 +8,20 @@ codes: 3D_SingStokes_Taylor_case_1.cpp, 3D_SingStokes_Taylor_case_2.cpp
 data: data_Taylor_treecode  
 preprint: arxiv.org/abs/1811.12498
 
-2. kernel-independent treecode for regularized Stokeslet and rotlet
+2. kernel-independent treecode for regularized Stokeslet
 
-codes: KITC_MRS_Combine_Data.cpp  
-data: combine_rand_lambda_10000.txt  
+codes: KITC_MRS.cpp  
+data: data.txt  
 preprint: arxiv.org/abs/1902.02250
 
 ## Treecode parameters
 
-Users can configure the following treecode parameters:  
-P (Lagrange interpolation order), default value is 3  
-numpars (number of particles), default value is 10000  
-N0 (leaf size), default value is 2000  
-sq_theta (square of MAC number), default value is 0.49  
-DEL (Regularized Stokeslet parameter), default value is 0.02  
+Users set the following treecode parameters.  
+P: Lagrange interpolation degree, default is 3  
+numpars: number of particles, default is 10000  
+N0: maximum leaf size, default is 2000  
+sq_theta: square of MAC parameter, default is 0.49  
+DEL: regularized Stokeslet parameter, default value is 0.02  
 
 The following CMake macros can be defined to overide the default parameters:  
 USER_PARAM_P  
