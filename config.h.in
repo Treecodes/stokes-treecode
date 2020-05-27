@@ -1,0 +1,19 @@
+/** @file 
+ *
+ * This is the template for the config.h file, which is created at
+ * build-time by cmake.
+ */
+#ifndef _CONFIG_
+#define _CONFIG_
+
+#define USER_PARAM_P @USER_PARAM_P@
+
+#define USER_PARAM_NUM_PARS @USER_PARAM_NUM_PARS@
+
+#define USER_PARAM_N0 @USER_PARAM_N0@
+
+#define USER_PARAM_SQ_THETA @USER_PARAM_SQ_THETA@
+
+#define USER_PARAM_DEL @USER_PARAM_DEL@
+
+#endif /* _CONFIG_ */
