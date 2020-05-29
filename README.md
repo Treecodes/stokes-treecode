@@ -35,7 +35,6 @@ USER_PARAM_DEL
 Example configure and build commands on UWM Mortime cluster:  
 ```
 module load icc/15.2
-module load openmpi/1.10.7
 git clone --branch KITC_RStokeslet https://github.com/Treecodes/stokes-treecode.git
 cd stokes-treecode
 mkdir build
