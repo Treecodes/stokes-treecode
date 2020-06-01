@@ -8,31 +8,32 @@ codes: 3D_SingStokes_Taylor_case_1.cpp, 3D_SingStokes_Taylor_case_2.cpp
 data: data_Taylor_treecode  
 preprint: arxiv.org/abs/1811.12498
 
-2. kernel-independent treecode for regularized Stokeslet
+2. kernel-independent treecode for regularized Stokeslets
 
-codes: KITC_MRS.cpp  
-data: data.txt  
+code: KITC_MRS.cpp  
+data: KITC_MRS_data.txt  
 preprint: arxiv.org/abs/1902.02250
 
 ## Treecode parameters
 
-Users set the following treecode parameters.  
-P: Lagrange interpolation degree, default is 3  
-numpars: number of particles, default is 10000  
-N0: maximum leaf size, default is 2000  
-sq_theta: square of MAC parameter, default is 0.49  
-DEL: regularized Stokeslet parameter, default value is 0.02  
+Users set the following treecode parameters. 
 
-The following CMake macros can be defined to overide the default parameters:  
-USER_PARAM_P  
-USER_PARAM_NUM_PARS  
+n: degree of Lagrange interpolating polynomial, default is 3  
+N: number of particles, default is 10000  
+N0: maximum leaf size, default is 2000  
+theta: MAC parameter, default is 0.7 
+eps: regularized Stokeslet parameter, default is 0.02  
+
+The following CMake macros can be defined to overide the default parameters.  
+USER_PARAM_n  
+USER_PARAM_N  
 USER_PARAM_N0  
-USER_PARAM_SQ_THETA  
-USER_PARAM_DEL  
+USER_PARAM_theta  
+USER_PARAM_eps  
 
 ## Configuring and building treecode with CMake
 
-Example configure and build commands on UWM Mortime cluster:  
+Example configure and build commands on UWM Mortimer cluster:  
 ```
 module load icc/15.2
 git clone --branch KITC_RStokeslet https://github.com/Treecodes/stokes-treecode.git
@@ -43,5 +44,5 @@ CXXFLAGS="-O2 -fopenmp" CXX=icpc cmake -D USER_PARAM_P=8 -D USER_PARAM_DEL=0.05 
 make
 ```
 
-If you don't have CMake installed, instructions to build and install one can be found at the following link:  
+If you don't have CMake installed, instructions to build and install one can be found at the following link. 
 https://cmake.org/pipermail/cmake/2009-December/033873.html
