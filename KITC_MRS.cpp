@@ -16,12 +16,13 @@
 
 using namespace std;
 
-static const int P = USER_PARAM_P; // Order of Far-field approximation
-static const int Pflat = (P + 1) * (P + 1) * (P + 1);
-static const int numpars = USER_PARAM_NUM_PARS; // numpars points total
+static const int n = USER_PARAM_n; // Order of Far-field approximation
+static const int nflat = (n + 1) * (n + 1) * (n + 1);
+static const int N = USER_PARAM_N; // N points total
 static const int N0 = USER_PARAM_N0;
-static const double sq_theta = USER_PARAM_SQ_THETA;
-static const double DEL = USER_PARAM_DEL;
+static const double theta = USER_PARAM_theta;
+static const double sq_theta = theta * theta;
+static const double eps = USER_PARAM_eps;
 static const double pi = 3.141592653589793238462643383;
 
 double xyzminmax[6];
@@ -54,7 +55,7 @@ struct xyz // Particle coordinates (physical)
   size_t* index;
   size_t* old_index;
 
-  xyz(size_t numpars_in) : size(numpars_in)
+  xyz(size_t N_in) : size(N_in)
   {
     x = new double[size];
     y = new double[size];
@@ -84,11 +85,11 @@ struct panel
   double zc; // Panel center z coordinate
   vector<size_t> children;
   double MAC; // r^2 / theta^2
-  double moments[3][Pflat];
+  double moments[3][nflat];
   int moment_flag;
-  double t1[P + 1]; // Interpolation points in x direction
-  double t2[P + 1];
-  double t3[P + 1];
+  double t1[n + 1]; // Interpolation points in x direction
+  double t2[n + 1];
+  double t3[n + 1];
 
   // Initialization
   panel() : xc(0.0), yc(0.0), zc(0.0), MAC(0.0), moment_flag(0)
@@ -106,7 +107,7 @@ struct panel
   }
 };
 
-struct xyz particles(numpars);
+struct xyz particles(N);
 
 vector<panel> tree;
 vector<size_t> leaf;
@@ -127,7 +128,7 @@ long getTickCount()
 double minval(double* x)
 {
   double MinVal = x[0];
-  for (int i = 1; i < numpars; i++) {
+  for (int i = 1; i < N; i++) {
     if (MinVal > x[i])
       MinVal = x[i];
   }
@@ -140,7 +141,7 @@ double minval(double* x)
 double maxval(double* x)
 {
   double MaxVal = x[0];
-  for (int i = 1; i < numpars; i++) {
+  for (int i = 1; i < N; i++) {
     if (MaxVal < x[i])
       MaxVal = x[i];
   }
@@ -170,7 +171,7 @@ int compute_Ds()
     printf("Number of threads in direct sum: %i\n", omp_get_num_threads());
 
   #pragma omp for private(temp_x, temp_y, temp_z, sum, px, py, pz, xx, yy, zz, sq_xx, sq_yy, sq_zz, R2, R, Rinv, Rinv3, ff, G, DD, ptr) //schedule(guided)
-  for (int i = 0; i < numpars; i++) {
+  for (int i = 0; i < N; i++) {
     temp_x = particles.x[i];
     temp_y = particles.y[i];
     temp_z = particles.z[i];
@@ -179,7 +180,7 @@ int compute_Ds()
     sum[1] = 0.0;
     sum[2] = 0.0;
 
-    for (int j = 0; j < numpars; j++) {
+    for (int j = 0; j < N; j++) {
       px = particles.x[j];
       py = particles.y[j];
       pz = particles.z[j];
@@ -193,7 +194,7 @@ int compute_Ds()
       sq_zz = zz * zz;
 
       R2 = sq_xx + sq_yy + sq_zz;
-      R = sqrt(R2 + DEL * DEL);
+      R = sqrt(R2 + eps * eps);
       Rinv = 1.0 / R;
       Rinv3 = Rinv * Rinv * Rinv;
 
@@ -201,7 +202,7 @@ int compute_Ds()
       ff[1] = lambda[1][j];
       ff[2] = lambda[2][j];
 
-      G = (2.0 * R2 + 3.0 * DEL * DEL) * Rinv3 - Rinv;
+      G = (2.0 * R2 + 3.0 * eps * eps) * Rinv3 - Rinv;
       sum[0] += ff[0] * G;
       sum[1] += ff[1] * G;
       sum[2] += ff[2] * G;
@@ -229,7 +230,7 @@ void build_tree_init()
 
   // Indices of particles belonging to the panel
   temp_panel.members[0] = 0;
-  temp_panel.members[1] = numpars - 1;
+  temp_panel.members[1] = N - 1;
 
   // Interval defining the panel
   temp_panel.xinterval[0] = xyzminmax[0];
@@ -931,36 +932,36 @@ void build_tree_3D_Recursive(size_t panel_index, int level)
   }
 }
 
-void Panel_Moment_B(size_t panel_index, double m[][Pflat])
+void Panel_Moment_B(size_t panel_index, double m[][nflat])
 {
   // Intput : panel_index
   // Output : m: moments for panel_index^th panel
-  double t1[P + 1];
-  double t2[P + 1];
-  double t3[P + 1];
+  double t1[n + 1];
+  double t2[n + 1];
+  double t3[n + 1];
 
   int i, j, k, kk;
   int a1exactind, a2exactind, a3exactind;
 
-  for (i = 0; i < P + 1; i++) {
+  for (i = 0; i < n + 1; i++) {
     t1[i] = tree[panel_index].t1[i];
     t2[i] = tree[panel_index].t2[i];
     t3[i] = tree[panel_index].t3[i];
   }
 
-  double w1i[P + 1];
-  double dj[P + 1];
+  double w1i[n + 1];
+  double dj[n + 1];
   dj[0] = 0.5;
-  dj[P] = 0.5;
-  for (j = 1; j < P; j++)
+  dj[n] = 0.5;
+  for (j = 1; j < n; j++)
     dj[j] = 1.0;
 
-  for (j = 0; j < P + 1; j++)
+  for (j = 0; j < n + 1; j++)
     w1i[j] = ((j % 2 == 0)? 1 : -1) * dj[j];
 
-  double a1i[P + 1];
-  double a2j[P + 1];
-  double a3k[P + 1];
+  double a1i[n + 1];
+  double a2j[n + 1];
+  double a3k[n + 1];
 
   double x, y, z;
   double dx, dy, dz;
@@ -987,7 +988,7 @@ void Panel_Moment_B(size_t panel_index, double m[][Pflat])
     SumA2 = 0.0;
     SumA3 = 0.0;
 
-    for (j = 0; j < P + 1; j++) {
+    for (j = 0; j < n + 1; j++) {
       dx = x - t1[j];
       dy = y - t2[j];
       dz = z - t3[j];
@@ -1016,28 +1017,28 @@ void Panel_Moment_B(size_t panel_index, double m[][Pflat])
 
     if (a1exactind > -1) {
       SumA1 = 1.0;
-      for (j = 0; j < P + 1; j++) a1i[j] = 0.0;
+      for (j = 0; j < n + 1; j++) a1i[j] = 0.0;
         a1i[a1exactind] = 1.0;
     }
 
     if (a2exactind > -1) {
       SumA2 = 1.0;
-      for (j = 0; j < P + 1; j++) a2j[j] = 0.0;
+      for (j = 0; j < n + 1; j++) a2j[j] = 0.0;
         a2j[a2exactind] = 1.0;
     }
 
     if (a3exactind > -1) {
       SumA3 = 1.0;
-      for (j = 0; j < P + 1; j++) a3k[j] = 0.0;
+      for (j = 0; j < n + 1; j++) a3k[j] = 0.0;
         a3k[a3exactind] = 1.0;
     }
 
     D = 1.0 / (SumA1 * SumA2 * SumA3);
 
     kk = -1;
-    for (i = 0; i < P + 1; i++) {
-      for (j = 0; j < P + 1; j++) {
-        for (k = 0; k < P + 1; k++) {
+    for (i = 0; i < n + 1; i++) {
+      for (j = 0; j < n + 1; j++) {
+        for (k = 0; k < n + 1; k++) {
           kk++;
           s = a1i[i] * a2j[j] * a3k[k] * D;
           m[0][kk] += s * lambda[0][tp_j];
@@ -1058,15 +1059,15 @@ vec_3d Call_Treecode(double x, double y, double z, int panel_index)
 
   double R2, R, Rinv, Rinv3;
 
-  double dx[P + 1];
-  double dy[P + 1];
-  double dz[P + 1];
+  double dx[n + 1];
+  double dy[n + 1];
+  double dz[n + 1];
 
   double temp_moments[3];
   double G;
   double DD;
 
-  for (int i = 0; i < P + 1; i++) {
+  for (int i = 0; i < n + 1; i++) {
     dx[i] = x - tree[panel_index].t1[i];
     dy[i] = y - tree[panel_index].t2[i];
     dz[i] = z - tree[panel_index].t3[i];
@@ -1075,13 +1076,13 @@ vec_3d Call_Treecode(double x, double y, double z, int panel_index)
   int kk = -1;
   double xx, yy, zz;
   double sq_xx, sq_yy, sq_zz;
-  for (int i = 0; i < P + 1; i++) {
+  for (int i = 0; i < n + 1; i++) {
     xx = dx[i];
     sq_xx = xx * xx;
-    for (int j = 0; j < P + 1; j++) {
+    for (int j = 0; j < n + 1; j++) {
       yy = dy[j];
       sq_yy = yy * yy;
-      for (int k = 0; k < P + 1; k++) {
+      for (int k = 0; k < n + 1; k++) {
         zz = dz[k];
         sq_zz = zz * zz;
         kk++;
@@ -1091,11 +1092,11 @@ vec_3d Call_Treecode(double x, double y, double z, int panel_index)
         temp_moments[2] = tree[panel_index].moments[2][kk];
 
         R2 = sq_xx + sq_yy + sq_zz;
-        R = sqrt(R2 + DEL * DEL);
+        R = sqrt(R2 + eps * eps);
         Rinv = 1.0 / R;
         Rinv3 = Rinv * Rinv * Rinv;
 
-        G = (2.0 * R2 + 3.0 * DEL * DEL) * Rinv3 - Rinv;
+        G = (2.0 * R2 + 3.0 * eps * eps) * Rinv3 - Rinv;
         velocity.val[0] += temp_moments[0] * G;
         velocity.val[1] += temp_moments[1] * G;
         velocity.val[2] += temp_moments[2] * G;
@@ -1136,7 +1137,7 @@ vec_3d Call_Ds(size_t limit_1, size_t limit_2, size_t particle_index, double p_x
     sq_zz = zz * zz;
 
     R2 = sq_xx + sq_yy + sq_zz;
-    R = sqrt(R2 + DEL * DEL);
+    R = sqrt(R2 + eps * eps);
     Rinv = 1.0 / R;
     Rinv3 = Rinv * Rinv * Rinv;
 
@@ -1144,7 +1145,7 @@ vec_3d Call_Ds(size_t limit_1, size_t limit_2, size_t particle_index, double p_x
     ff[1] = lambda[1][jj];
     ff[2] = lambda[2][jj];
 
-    G = (2.0 * R2 + 3.0 * DEL * DEL) * Rinv3 - Rinv;
+    G = (2.0 * R2 + 3.0 * eps * eps) * Rinv3 - Rinv;
     velocity.val[0] += ff[0] * G;
     velocity.val[1] += ff[1] * G;
     velocity.val[2] += ff[2] * G;
@@ -1220,9 +1221,9 @@ vec_3d Compute_RBF(size_t particle_index, size_t panel_index)
 
 void Cluster_Chev_Points(size_t tree_size)
 {
-  double h = pi / P;
-  double t[P + 1] = {0.0};
-  for (int i = 0; i < P + 1; i++)
+  double h = pi / n;
+  double t[n + 1] = {0.0};
+  for (int i = 0; i < n + 1; i++)
     t[i] = cos(i * h); // Chebyshev interpolation points [-1, 1]
 
   double x1, x2, y1, y2, z1, z2;
@@ -1236,7 +1237,7 @@ void Cluster_Chev_Points(size_t tree_size)
     z1 = tree[tree_index].zinterval[0];
     z2 = tree[tree_index].zinterval[1];
 
-    for (int i = 0; i < P + 1; i++) { // Map to the cluster
+    for (int i = 0; i < n + 1; i++) { // Map to the cluster
       tree[tree_index].t1[i] = x1 + (t[i] + 1.0) * 0.5 * (x2 - x1);
       tree[tree_index].t2[i] = y1 + (t[i] + 1.0) * 0.5 * (y2 - y1);
       tree[tree_index].t3[i] = z1 + (t[i] + 1.0) * 0.5 * (z2 - z1);
@@ -1247,12 +1248,12 @@ void Cluster_Chev_Points(size_t tree_size)
 int main()
 {
   cout << " ===== No box shrink ===========" << endl;
-  cout << "P is " << P << endl;
-  cout << "numpars is " << numpars << endl;
-  cout << "theta is " << sqrt(sq_theta) << endl;
+  cout << "n is " << n << endl;
+  cout << "N is " << N << endl;
+  cout << "theta is " << theta << endl;
   cout << "N0 is " << N0 << endl;
 
-  char data_file[64] = "./data.txt";
+  char data_file[64] = "./KITC_MRS_data.txt";
   FILE* fp = fopen(data_file, "r");
   if (fp == NULL) {
     cerr << "Cannot open data file " << data_file << "!" << endl;
@@ -1260,7 +1261,7 @@ int main()
   }
 
   for (int i = 0; i < 3; i++)
-    lambda[i] = new double[numpars];
+    lambda[i] = new double[N];
 
   int counter = 0;
   double x1, x2, x3, c1, c2, c3;
@@ -1274,12 +1275,12 @@ int main()
     lambda[1][counter] = c2;
     lambda[2][counter] = c3;
     counter++;
-    if (counter == numpars)
+    if (counter == N)
       break;
   }
   fclose(fp);
 
-  if (counter < numpars) {
+  if (counter < N) {
     cerr << "Less lines of point data were read! counter = " << counter << endl;
     return 1;
   }
@@ -1300,8 +1301,8 @@ int main()
   cout << endl;
   */
 
-  velo = new vec_3d[numpars];
-  velo_true = new vec_3d[numpars];
+  velo = new vec_3d[N];
+  velo_true = new vec_3d[N];
 
   //***************** Set up tree *******************************
   long total_time, build_tree_time, moment_cpu_time, treecode_cpu_time, ds_cpu_time;
@@ -1337,7 +1338,7 @@ int main()
   }
 
   #pragma omp for //schedule(guided, 100) // Tell compiler the following for loop is parallelizable. Uses guided schedule to help load balancing
-  for (int particle_index = 0; particle_index < numpars; particle_index++)
+  for (int particle_index = 0; particle_index < N; particle_index++)
     velo[particle_index] = Compute_RBF(particle_index, 0);
   } // End omp parallel region
 
@@ -1378,7 +1379,7 @@ int main()
   double max_n = 0.0;
   double max_d = 0.0;
 
-  for (int i = 0; i < numpars; i++) {
+  for (int i = 0; i < N; i++) {
     for (int d = 0; d < 3; d++) {
       temp_n += (velo[i].val[d] - velo_true[i].val[d]) * (velo[i].val[d] - velo_true[i].val[d]);
       temp_d += velo_true[i].val[d] * velo_true[i].val[d];
@@ -1404,7 +1405,7 @@ int main()
   double err2_ex = 0.0;
   double sum_d_ex = 0.0;
   double sum_n_ex = 0.0;
-  for (int i = 0; i < numpars; i++) {
+  for (int i = 0; i < N; i++) {
     for (int d = 0; d < 3; d++) {
       sum_n_ex += (velo[i].val[d] - velo_true[i].val[d]) * (velo[i].val[d] - velo_true[i].val[d]);
       sum_d_ex += velo_true[i].val[d] * velo_true[i].val[d];
