@@ -33,6 +33,16 @@ USER_PARAM_eps
 
 ## Configuring and building treecode with CMake
 
+Example configure and build commands on Linux/Mac workstation or laptop:  
+```
+git clone --branch KITC_RStokeslet https://github.com/Treecodes/stokes-treecode.git
+cd stokes-treecode
+mkdir build
+cd build
+CXXFLAGS="-O2 -fopenmp" CXX=g++ cmake -D USER_PARAM_n=8 -D USER_PARAM_eps=0.05 ..
+make
+```
+
 Example configure and build commands on UWM Mortimer cluster:  
 ```
 module load icc/15.2
@@ -40,7 +50,7 @@ git clone --branch KITC_RStokeslet https://github.com/Treecodes/stokes-treecode.
 cd stokes-treecode
 mkdir build
 cd build
-CXXFLAGS="-O2 -fopenmp" CXX=icpc cmake -D USER_PARAM_P=8 -D USER_PARAM_DEL=0.05 ..
+CXXFLAGS="-O2 -fopenmp" CXX=icpc cmake -D USER_PARAM_n=8 -D USER_PARAM_eps=0.05 ..
 make
 ```
 
