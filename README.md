@@ -8,7 +8,7 @@ codes: 3D_SingStokes_Taylor_case_1.cpp, 3D_SingStokes_Taylor_case_2.cpp
 data: data_Taylor_treecode  
 preprint: arxiv.org/abs/1811.12498
 
-2. kernel-independent treecode for regularized Stokeslets
+2. kernel-independent barycentric Lagrange treecode for regularized Stokeslets
 
 code: KITC_MRS.cpp  
 data: KITC_MRS_data.txt  
@@ -17,7 +17,6 @@ preprint: arxiv.org/abs/1902.02250
 ## Treecode parameters
 
 Users set the following treecode parameters. 
-
 n: degree of Lagrange interpolating polynomial, default is 3  
 N: number of particles, default is 10000  
 N0: maximum leaf size, default is 2000  
