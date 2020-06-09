@@ -16,7 +16,7 @@ preprint: arxiv.org/abs/1902.02250
 
 ## Treecode parameters
 
-Users set the following treecode parameters. 
+Users set the following treecode parameters.  
 n: degree of Lagrange interpolating polynomial, default is 3  
 N: number of particles, default is 10000  
 N0: maximum leaf size, default is 2000  
@@ -53,27 +53,29 @@ CXXFLAGS="-O2 -fopenmp" CXX=icpc cmake -D USER_PARAM_n=8 -D USER_PARAM_eps=0.05 
 make
 ```
 
-If you don't have CMake installed, instructions to build and install one can be found at the following link.  
-https://cmake.org/pipermail/cmake/2009-December/033873.html  
+If you don't have CMake to use, you can run a package management tool to install one.  
+Mac: brew install cmake  
+Debian/Ubuntu: sudo apt-get install cmake  
+Redhat/CentOS: sudo yum install cmake  
 
-On Mac OS X, you can install various versions of GCC via Homebrew. The default installation directory is /usr/local/Cellar/gcc.  
-GCC 5: brew install gcc@5  
-GCC 6: brew install gcc@6  
-GCC 7: brew install gcc@7  
-GCC 8: brew install gcc@8  
-GCC 9: brew install gcc@9  
+However, if you don't have root privileges, instructions to build and install CMake can be found at the following link.  
+https://cmake.org/pipermail/cmake/2009-December/033873.html
 
-To use a specific version of GCC by default, say 7.2.0, first create symbolic links gcc/g++ for gcc-7/g++-7:  
-```
-cd /usr/local/Cellar/gcc/7.2.0/bin
-ln -s gcc-7 gcc
-ln -s g++-7 g++
-```
+## Install and use latest GCC on Mac
 
-Next, add the following lines to ~/.bash_profile:  
+On Mac OS X, the default GCC might not support OpenMP, and you can install latest Homebrew GCC with "brew install gcc".  
+
+For Homebrew GCC 9.3.0_1, create the following two symbolic links to use gcc/g++ instead of gcc-9/g++-9:  
 ```
-export PATH="/usr/local/Cellar/gcc/7.2.0/bin:$PATH"
-export DYLD_LIBRARY_PATH="/usr/local/Cellar/gcc/7.2.0/lib/gcc/7:$DYLD_LIBRARY_PATH"
+cd /usr/local/Cellar/gcc/9.3.0_1/bin
+ln -s gcc-9 gcc
+ln -s g++-9 g++
 ```
 
-To use other versions, slightly modify above commands with corresponding version numbers.
+Next, edit ~/.bash_profile and append the following two lines to use Homebrew GCC 9.3.0_1 by default:  
+```
+export PATH="/usr/local/Cellar/gcc/9.3.0_1/bin:$PATH"
+export DYLD_LIBRARY_PATH="/usr/local/Cellar/gcc/9.3.0_1/lib/gcc/9:$DYLD_LIBRARY_PATH"
+```
+
+For a different version of Homebrew GCC, slightly modify above commands with corresponding version numbers.
