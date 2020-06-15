@@ -4,7 +4,7 @@ This repo contains files needed to run different versions of the treecode for St
 
 1. Taylor treecode for singular Stokeslet and stresslet
 
-codes: 3D_SingStokes_Taylor_case_1.cpp, 3D_SingStokes_Taylor_case_2.cpp  
+codes: TTC_SingStokes_case_1.cpp, TTC_SingStokes_case_2.cpp  
 data: data_Taylor_treecode  
 preprint: arxiv.org/abs/1811.12498
 
