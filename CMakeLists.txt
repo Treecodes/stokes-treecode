@@ -46,4 +46,4 @@ configure_file (
 include_directories("${PROJECT_BINARY_DIR}")
 
 # add the executable
-add_executable(ctreecode KITC_MRS.cpp)
+add_executable(ctreecode BLTC_MRS.cpp)
