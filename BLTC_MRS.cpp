@@ -1253,7 +1253,7 @@ int main()
   cout << "theta is " << theta << endl;
   cout << "N0 is " << N0 << endl;
 
-  char data_file[64] = "./KITC_MRS_data.txt";
+  char data_file[64] = "./BLTC_MRS_data.txt";
   FILE* fp = fopen(data_file, "r");
   if (fp == NULL) {
     cerr << "Cannot open data file " << data_file << "!" << endl;
