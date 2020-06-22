@@ -8,10 +8,10 @@ codes: TTC_SingStokes_case_1.cpp, TTC_SingStokes_case_2.cpp
 data: data_Taylor_treecode  
 preprint: arxiv.org/abs/1811.12498
 
-2. kernel-independent barycentric Lagrange treecode for regularized Stokeslets
+2. kernel-independent barycentric Lagrange treecode (BLTC) for regularized Stokeslets
 
-code: KITC_MRS.cpp  
-data: KITC_MRS_data.txt  
+code: BLTC_MRS.cpp  
+data: BLTC_MRS_data.txt  
 preprint: arxiv.org/abs/1902.02250
 
 ## Treecode parameters
