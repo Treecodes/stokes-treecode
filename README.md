@@ -2,7 +2,7 @@
 
 This repo contains files needed to run different versions of the treecode for Stokes kernels. There are two versions of the treecode and each one has two test cases. Currently all the parameters are hard-coded, so these may need to be edited before building the executables. To build the executables, run the Makefile using the `make` command. Currently the Makefile is set to use the icpc compiler.
 
-1. barycentric Lagrange kernel-independent treecode for regularized Stokeslet and rotlet
+This  1. barycentric Lagrange kernel-independent treecode for regularized Stokeslet and rotlet
 
 codes: 3D_RegStokes_case_1.cpp, 3D_RegStokes_case_2.cpp  
 data: to be added  
