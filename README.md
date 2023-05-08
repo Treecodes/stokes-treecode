@@ -19,8 +19,7 @@ reference: L. Wang, R. Krasny, S. Tlupova (2020) A kernel-independent treecode b
 codes: 3D_SingStokes_Taylor_case_1.cpp, 3D_SingStokes_Taylor_case_2.cpp  
 data files: data_Taylor_treecode   
 reference: L. Wang, S. Tlupova, R. Krasny (2019) A treecode algorithm for 3D Stokeslets and stresslets, Advances in Applied Mathematics and Mechanics 11, 737-756
-
-In data_Taylor_treecode there are files for two test cases,
+notes: In data_Taylor_treecode there are files for two test cases,
 (1) Stokeslet and stresslet particles on a sphere with system size N = 20480, 81920, 327680, 1310720,
 (2) Stokeslets randomly distributed in cubes with system size N = 125K, 400K, 1000K.
 Files with "lambda" in filename are weights.
