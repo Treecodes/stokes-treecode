@@ -1,0 +1,13 @@
+CXX = icpc
+FLAGS = -c -O2 -std=c++11
+
+OBJECTS = SLDM_BLTC.o
+
+ctreecode.exe : $(OBJECTS)
+	 $(CXX) -o ctreecode *.o -lm liblapack.a libblas.a libf2c.a 
+
+SLDM_BLTC.o : SLDM_BLTC.cpp
+	 $(CXX) $(FLAGS) SLDM_BLTC.cpp 
+
+clean :
+	\rm -f *.o *~ ctreecode
