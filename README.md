@@ -1,6 +1,6 @@
 # stokes-treecode
 
-This repo contains files needed to run different versions of the treecode for Stokes-related kernels. There are two versions of the treecode (BLTC, TTC). Currently all parameters are hard-coded. To build the executable, run the Makefile using the `make` command. Currently the Makefile is set to use the icpc compiler. The SLDM requires downloading and building LAPACK (https://netlib.org/lapack/) which used for spectral factorization of the Lanczos matrix.
+This repo contains files needed to run different versions of the treecode for Stokes-related kernels. There are two versions of the treecode (BLTC, TTC). Currently all parameters are hard-coded. To build the executable, run the Makefile using the `make` command. Currently the Makefile is set to use the icpc compiler. The SLDM requires downloading and building LAPACK (https://netlib.org/lapack/) which is used for spectral factorization of the Lanczos matrix.
 
 1. Spectral Lanczos Decomposition Method (SLDM) with barycentric Lagrange treecode (BLTC)
 
