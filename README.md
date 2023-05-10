@@ -5,7 +5,7 @@ This repo contains files needed to run different versions of the treecode for St
 1. Spectral Lanczos Decomposition Method (SLDM) with barycentric Lagrange treecode (BLTC)
 
 **code**: SLDM_BLTC.cpp  
-**data files**: ...  
+**data files**: data_SLDM_BLTC  
 **reference**: ...  
 
 2. barycentric Lagrange treecode (BLTC) for regularized Stokeslet and rotlet
