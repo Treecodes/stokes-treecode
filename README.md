@@ -6,7 +6,7 @@ This repo contains files needed to run different versions of the treecode for St
 
 **code**: code_SLDM_BLTC.cpp  
 **data files**: data_SLDM_BLTC  
-**reference**: ...  
+**reference**: in preparation  
 
 2. barycentric Lagrange treecode (BLTC) for regularized Stokeslet and rotlet
 
