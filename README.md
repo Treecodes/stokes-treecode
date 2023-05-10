@@ -1,6 +1,6 @@
 # stokes-treecode
 
-This repo contains files needed to run different versions of the treecode for Stokes-related kernels in 3D. There are two versions of the treecode, (1) BLTC (barycentric Lagrange treecode), (2) TTC (Taylor treecode). Currently all parameters are hard-coded. To build the executable, run the Makefile using the `make` command. Currently the Makefile is set to use the icpc compiler. The most recent addition uses the SLDM (Spectral Lanczos Decomposition Method) to compute correlated random displacements for Brownian dynamics simulations. The SLDM requires downloading and building LAPACK (https://netlib.org/lapack/) which is used for spectral factorization of the Lanczos matrix.
+This repo contains files needed to run different versions of the treecode for Stokes-related kernels in 3D. There are two versions of the treecode, (1) BLTC (barycentric Lagrange treecode), (2) TTC (Taylor treecode). Currently all parameters are hard-coded. To build the executable, run the Makefile using the `make` command. Currently the Makefile is set to use the icpc compiler. The most recent addition uses the SLDM (Spectral Lanczos Decomposition Method) to compute correlated random displacements for Brownian dynamics simulations. The SLDM requires downloading and building LAPACK (https://netlib.org/lapack/) which is used for spectral factorization of the Lanczos matrix. For questions/comments contact Lei Wang (wang256@uwm.edu) or Robert Krasny (krasny@umich.edu).
 
 1. Spectral Lanczos Decomposition Method (SLDM) with barycentric Lagrange treecode (BLTC)
 
